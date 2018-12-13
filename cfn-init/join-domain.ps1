@@ -38,4 +38,4 @@ $content = Get-Content $DomainFile
 $UserPS = $content[0]
 $PassPS = ConvertTo-SecureString $content[1] -AsPlainText -Force
 $DomainCred = New-Object System.Management.Automation.PSCredential $UserPS, $PassPS
-Add-Computer -DomainName $content[2] -Credential $DomainCred -Restart
+Add-Computer -DomainName $content[2] -Credential $DomainCred -Restart -Force
