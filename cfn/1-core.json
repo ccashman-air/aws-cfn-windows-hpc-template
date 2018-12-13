@@ -83,8 +83,8 @@
 		"AWSAmiId" : {
 			"Description"          : "Identifier of the Amazon Machine Image to use for the platforms (all machines are started using the same AMI). We use Microsoft Windows Server 2012 R2 Base 64bits.",
 			"Type"                 : "String",
-			"AllowedPattern"       : "ami-([0-9a-fA-F]{8})",
-			"ConstraintDescription": "must be a valid Amazon Machine Image (ami-xxxxxxxx)."
+			"AllowedPattern"       : "((ami-([0-9a-fA-F]{8}))|(ami-([0-9a-fA-F]{17})))",
+			"ConstraintDescription": "must be a valid Amazon Machine Image (ami-xxxxxxxxxxxxxxxxx or ami-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx)."
 		},
 		"BastionInstanceType" : {
 			"Description": "Instance type to use for the Bastion Instance",
