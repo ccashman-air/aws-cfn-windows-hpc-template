@@ -52,9 +52,9 @@ This will create a folder called SQLInstall on your D drive
 
 This step is optional, but you may want to check if you have the latest drivers.
 
-Download the following file: `https://s3.amazonaws.com/ec2-downloads-windows/Drivers/AWSPVDriverSetup.zip` to D:\AWSPVDriverSetup.zip
+Download the following file: `https://s3.amazonaws.com/ec2-windows-drivers-downloads/AWSPV/Latest/AWSPVDriver.zip` to D:\AWSPVDriverSetup.zip
 
-Extract the content to `D:\AWSPVDriverSetup`
+Extract the content to `D:\AWSPVDriverSetup`.
 
 You can remove the `D:\AWSPVDriverSetup.zip` file.
 
