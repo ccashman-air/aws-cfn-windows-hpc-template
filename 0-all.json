@@ -2,6 +2,11 @@
 	"AWSTemplateFormatVersion": "2010-09-09",
 	"Description": "This CloudFormation Template deploys a complete Microsoft HPC Pack environment. **WARNING** This template creates Amazon EC2 instances, AWS Lambda Functions, and other resources. You will be billed for the AWS resources used if you create a stack from this template.",
 	"Parameters": {
+		"KeyName" : {
+			"Description": "Name of an existing EC2 Key Pair",
+			"Type"       : "String",
+			"Default"    : ""
+		},
 		"SnapshotName" : {
 			"Description": "'Name' tag of the snapshot containing the Microsoft HPC Pack installation package",
 			"Type"       : "String",
@@ -109,6 +114,7 @@
 			"Properties": {
 				"TemplateURL": "<SUBSTACKSOURCE>cfn/1-core.json",
 				"Parameters" : {
+					"KeyName": { "Ref": "KeyName" },
 					"AWSAmiId": { "Fn::GetAtt": [ "Image", "Outputs.AMIId"] },
 					"AdministratorPassword": { "Ref": "AdministratorPassword" },
 					"RestoreModePassword": { "Ref": "RestoreModePassword" },
@@ -125,6 +131,7 @@
 			"Properties": {
 				"TemplateURL": "<SUBSTACKSOURCE>cfn/2-cluster.json",
 				"Parameters" : {
+					"KeyName": { "Ref": "KeyName" },
 					"AWSAmiId": { "Fn::GetAtt": [ "Image", "Outputs.AMIId"] },
 					"SnapshotID": { "Fn::GetAtt": [ "Snapshot", "Outputs.SnapshotId"] },
 					"ClusterSubnetID": { "Fn::GetAtt": [ "Core", "Outputs.ClusterSubnetID"] },
