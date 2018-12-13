@@ -77,14 +77,14 @@
 		"ComputeNodeInstanceCount" : {
 			"Description": "Number of compute nodes to start initially",
 			"Type"       : "Number",
-			"MinValue"   : "1",
-			"Default"    : "2"
+			"MinValue"   : "0",
+			"Default"    : "0"
 		},
 		"ComputeNodeInstanceMaxCount" : {
 			"Description": "Maximum number of compute nodes to start",
 			"Type"       : "Number",
 			"MinValue"   : "1",
-			"Default"    : "50"
+			"Default"    : "5"
 		}
 	},
 	"Resources": {
