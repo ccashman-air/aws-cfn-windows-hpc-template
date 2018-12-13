@@ -26,4 +26,4 @@ param(
   [string]$ComputerName
 )
 
-Rename-Computer -NewName $ComputerName -Restart
+Rename-Computer -NewName $ComputerName -Restart -Force
