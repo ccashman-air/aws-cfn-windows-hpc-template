@@ -67,7 +67,7 @@
 		"ComputeNodeInstanceType" : {
 			"Description" : "Instance type to use for the Compute Node Instance",
 			"Type"        : "String",
-			"Default"     : "c3.8xlarge"
+			"Default"     : "m4.2xlarge"
 		},
 		"ClusterPlacementGroup" : {
 			"Description": "Name of an existing placement group for the cluster nodes (no placement group if empty)",
