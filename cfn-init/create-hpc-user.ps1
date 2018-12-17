@@ -37,8 +37,8 @@ if (-not (Test-Path $UserFile))
     Throw "File '$UserFile' does not exist, exiting script"
 }
 
-$domain = Get-ADDomain
-$domain | Set-ADDomain -Replace @{"ms-ds-MachineAccountQuota"="$MaxComputersPerUser"}
+$domain = Get-ADDomain -Server "DC"
+$domain | Set-ADDomain -Server "DC" -Replace @{"ms-ds-MachineAccountQuota"="$MaxComputersPerUser"}
 
 Import-Module ServerManager
 Install-WindowsFeature RSAT-ADDS
@@ -46,7 +46,7 @@ $content = Get-Content $UserFile
 $UserPS = $content[0]
 $PassPS = ConvertTo-SecureString $content[1] -AsPlainText -Force
 $logonName = $content[4]
-New-ADUser -Name $logonName -AccountPassword $PassPS -PasswordNeverExpires:$false -ChangePasswordAtLogon:$false -Enabled:$true
+New-ADUser -Name $logonName -AccountPassword $PassPS -Server "DC" -PasswordNeverExpires:$false -ChangePasswordAtLogon:$false -Enabled:$true
 
 $domainName = $domain.ComputersContainer
 dsacls $domainName /I:S /G "$($UserPS):CC;;computer"
