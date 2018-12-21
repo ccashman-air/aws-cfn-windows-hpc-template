@@ -278,8 +278,24 @@
 								"source": "<SUBSTACKSOURCE>cfn-init/rename-computer.ps1",
 								"authentication" : "rolebased"
 			                },
-							"C:\\cfn\\install\\configure-network.ps1" : {
-								"source": "<SUBSTACKSOURCE>cfn-init/configure-hpc-network.ps1",
+							"C:\\cfn\\install\\configure-network-adapter-settings.ps1" : {
+								"source": "<SUBSTACKSOURCE>cfn-init/configure-hpc-network-adapter-settings.ps1",
+								"authentication" : "rolebased"
+							},
+							"C:\\cfn\\install\\configure-network-dns.ps1" : {
+								"source": "<SUBSTACKSOURCE>cfn-init/configure-hpc-network-dns.ps1",
+								"authentication" : "rolebased"
+							},
+							"C:\\cfn\\install\\configure-network-drivers.ps1" : {
+								"source": "<SUBSTACKSOURCE>cfn-init/configure-hpc-network-drivers.ps1",
+								"authentication" : "rolebased"
+							},
+							"C:\\cfn\\install\\configure-network-ip.ps1" : {
+								"source": "<SUBSTACKSOURCE>cfn-init/configure-hpc-network-ip.ps1",
+								"authentication" : "rolebased"
+							},
+							"C:\\cfn\\install\\configure-network-windows-update.ps1" : {
+								"source": "<SUBSTACKSOURCE>cfn-init/configure-hpc-network-windows-update.ps1",
 								"authentication" : "rolebased"
 							},
 							"C:\\cfn\\install\\join-domain.ps1" : {
@@ -296,6 +312,14 @@
 							},
 							"C:\\cfn\\install\\install-process.ps1" : {
 								"source": "<SUBSTACKSOURCE>cfn-init/install-process-head.ps1",
+								"authentication" : "rolebased"
+			                },
+							"C:\\cfn\\install\\AIR-Win2012HPC2016.pfx" : {
+								"source": "<SUBSTACKSOURCE>cfn-init/AIR-Win2012HPC2016.pfx",
+								"authentication" : "rolebased"
+			                },
+							"C:\\cfn\\install\\AIR-Win2012HPC2016.cer" : {
+								"source": "<SUBSTACKSOURCE>cfn-init/AIR-Win2012HPC2016.cer",
 								"authentication" : "rolebased"
 			                },
 							"C:\\cfn\\install\\install-hpc-pack.ps1" : {
@@ -346,19 +370,35 @@
 								"command": { "Fn::Join" : ["", [ "powershell.exe -ExecutionPolicy Unrestricted C:\\cfn\\install\\initialize-d-drive.ps1 -DomainNetBIOSName ", { "Ref": "DomainNetBIOSName" } ] ] },
 								"waitAfterCompletion": "0"
 							},
-							"05-configure-network": {
-								"command": { "Fn::Join" : ["", [ "powershell.exe -ExecutionPolicy Unrestricted C:\\cfn\\install\\configure-network.ps1 -DomainDNSName ", { "Ref": "DomainDNSName" }, " -InterfaceNewName Enterprise" ] ] },
+							"05-configure-network-ip": {
+								"command": { "Fn::Join" : ["", [ "powershell.exe -ExecutionPolicy Unrestricted C:\\cfn\\install\\configure-network-ip.ps1 -InterfaceNewName Enterprise" ] ] },
 								"waitAfterCompletion": "5"
 							},
-							"06-setup-hpcpack": {
+							"06-configure-network-dns": {
+								"command": { "Fn::Join" : ["", [ "powershell.exe -ExecutionPolicy Unrestricted C:\\cfn\\install\\configure-network-dns.ps1 -DomainDNSName ", { "Ref": "DomainDNSName" }, " -InterfaceNewName Enterprise" ] ] },
+								"waitAfterCompletion": "5"
+							},
+							"07-install-drivers": {
+								"command": { "Fn::Join" : ["", [ "powershell.exe -ExecutionPolicy Unrestricted C:\\cfn\\install\\configure-network-drivers.ps1" ] ] },
+								"waitAfterCompletion": "5"
+							},
+							"08-configure-network-adapter-settings": {
+								"command": { "Fn::Join" : ["", [ "powershell.exe -ExecutionPolicy Unrestricted C:\\cfn\\install\\configure-network-adapter-settings.ps1 -InterfaceNewName Enterprise" ] ] },
+								"waitAfterCompletion": "5"
+							},
+							"09-configure-network-windows-update": {
+								"command": { "Fn::Join" : ["", [ "powershell.exe -ExecutionPolicy Unrestricted C:\\cfn\\install\\configure-network-windows-update.ps1" ] ] },
+								"waitAfterCompletion": "5"
+							},
+							"10-setup-hpcpack": {
 								"command": { "Fn::Join" : ["", [ "powershell.exe -ExecutionPolicy Unrestricted C:\\cfn\\install\\install-process.ps1 -UserFile c:\\cfn\\install\\hpc-user-info.conf -Stack ", { "Ref": "AWS::StackName" }, " -Region ", { "Ref": "AWS::Region" } ] ] },
 								"waitAfterCompletion": "0"
 							},
-							"07-cleanup-files": {
+							"11-cleanup-files": {
 								"command": "C:\\cfn\\install\\CleanupFiles.cmd",
 								"waitAfterCompletion": "0"
 							},
-							"08-signal-success": {
+							"12-signal-success": {
 								"command": { "Fn::Join" : ["", [ "cfn-signal.exe -e 0 \"", { "Fn::Base64" : { "Ref" : "HeadNodeWaitHandle" } }, "\"" ] ] },
 								"waitAfterCompletion": "0"
 							}
@@ -440,8 +480,24 @@
 									"HPCUserPassword": { "Ref" : "HPCUserPassword" }
 								}
 							},
-							"C:\\cfn\\install\\configure-network.ps1" : {
-								"source": "<SUBSTACKSOURCE>cfn-init/configure-hpc-network.ps1",
+							"C:\\cfn\\install\\configure-network-adapter-settings.ps1" : {
+								"source": "<SUBSTACKSOURCE>cfn-init/configure-hpc-network-adapter-settings.ps1",
+								"authentication" : "rolebased"
+							},
+							"C:\\cfn\\install\\configure-network-dns.ps1" : {
+								"source": "<SUBSTACKSOURCE>cfn-init/configure-hpc-network-dns.ps1",
+								"authentication" : "rolebased"
+							},
+							"C:\\cfn\\install\\configure-network-drivers.ps1" : {
+								"source": "<SUBSTACKSOURCE>cfn-init/configure-hpc-network-drivers.ps1",
+								"authentication" : "rolebased"
+							},
+							"C:\\cfn\\install\\configure-network-ip.ps1" : {
+								"source": "<SUBSTACKSOURCE>cfn-init/configure-hpc-network-ip.ps1",
+								"authentication" : "rolebased"
+							},
+							"C:\\cfn\\install\\configure-network-windows-update.ps1" : {
+								"source": "<SUBSTACKSOURCE>cfn-init/configure-hpc-network-windows-update.ps1",
 								"authentication" : "rolebased"
 							},
 							"C:\\cfn\\install\\join-domain.ps1" : {
@@ -458,6 +514,14 @@
 							},
 							"C:\\cfn\\install\\install-process.ps1" : {
 								"source": "<SUBSTACKSOURCE>cfn-init/install-process-compute.ps1",
+								"authentication" : "rolebased"
+			                },
+							"C:\\cfn\\install\\AIR-Win2012HPC2016.pfx" : {
+								"source": "<SUBSTACKSOURCE>cfn-init/AIR-Win2012HPC2016.pfx",
+								"authentication" : "rolebased"
+			                },
+							"C:\\cfn\\install\\AIR-Win2012HPC2016.cer" : {
+								"source": "<SUBSTACKSOURCE>cfn-init/AIR-Win2012HPC2016.cer",
 								"authentication" : "rolebased"
 			                },
 							"C:\\cfn\\install\\install-hpc-pack.ps1" : {
@@ -500,19 +564,35 @@
 								"command": { "Fn::Join" : ["", [ "powershell.exe -ExecutionPolicy Unrestricted C:\\cfn\\install\\initialize-d-drive.ps1 -DomainNetBIOSName ", { "Ref": "DomainNetBIOSName" } ] ] },
 								"waitAfterCompletion": "0"
 							},
-							"04-configure-network": {
-								"command": { "Fn::Join" : ["", [ "powershell.exe -ExecutionPolicy Unrestricted C:\\cfn\\install\\configure-network.ps1 -DomainDNSName ", { "Ref": "DomainDNSName" }, " -InterfaceNewName Enterprise" ] ] },
+							"04-configure-network-ip": {
+								"command": { "Fn::Join" : ["", [ "powershell.exe -ExecutionPolicy Unrestricted C:\\cfn\\install\\configure-network-ip.ps1 -InterfaceNewName Enterprise" ] ] },
 								"waitAfterCompletion": "5"
 							},
-							"05-setup-hpcpack": {
+							"05-configure-network-dns": {
+								"command": { "Fn::Join" : ["", [ "powershell.exe -ExecutionPolicy Unrestricted C:\\cfn\\install\\configure-network-dns.ps1 -DomainDNSName ", { "Ref": "DomainDNSName" }, " -InterfaceNewName Enterprise" ] ] },
+								"waitAfterCompletion": "5"
+							},
+							"06-install-drivers": {
+								"command": { "Fn::Join" : ["", [ "powershell.exe -ExecutionPolicy Unrestricted C:\\cfn\\install\\configure-network-drivers.ps1" ] ] },
+								"waitAfterCompletion": "5"
+							},
+							"07-configure-network-adapter-settings": {
+								"command": { "Fn::Join" : ["", [ "powershell.exe -ExecutionPolicy Unrestricted C:\\cfn\\install\\configure-network-adapter-settings.ps1 -InterfaceNewName Enterprise" ] ] },
+								"waitAfterCompletion": "5"
+							},
+							"08-configure-network-windows-update": {
+								"command": { "Fn::Join" : ["", [ "powershell.exe -ExecutionPolicy Unrestricted C:\\cfn\\install\\configure-network-windows-update.ps1" ] ] },
+								"waitAfterCompletion": "5"
+							},
+							"09-setup-hpcpack": {
 								"command": { "Fn::Join" : ["", [ "powershell.exe -ExecutionPolicy Unrestricted C:\\cfn\\install\\install-process.ps1 -UserFile c:\\cfn\\install\\hpc-user-info.conf -Stack ", { "Ref": "AWS::StackName" }, " -Region ", { "Ref": "AWS::Region" } ] ] },
 								"waitAfterCompletion": "0"
 							},
-							"06-cleanup-files": {
+							"10-cleanup-files": {
 								"command": "C:\\cfn\\install\\CleanupFiles.cmd",
 								"waitAfterCompletion": "0"
 							},
-							"07-signal-success": {
+							"11-signal-success": {
 								"command": { "Fn::Join": ["", [ "cfn-signal.exe -e 0 \"", { "Fn::Base64" : { "Ref" : "ComputeNodeWaitHandle" } },"\"" ] ] },
 								"waitAfterCompletion": "0"
 							}
@@ -569,6 +649,8 @@
 				"ComparisonOperator": "GreaterThanOrEqualToThreshold"
 			}
 		},
+
+
 
 		"ComputeNodes": {
 			"DependsOn": ["HeadNodeWaitCondition"],
