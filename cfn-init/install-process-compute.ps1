@@ -69,12 +69,17 @@ schtasks.exe /Run /I /TN PostInstallHPCPack
 Write-Host "Waiting for Post-Installation"
 Add-PSSnapIn Microsoft.HPC
 
+<#
+# Fails because this script is being run as NT Authority, which does not have permissions on the scheduler,
+# and hence Get-HpcNode repeatedly fails.
+#
 $state = (Get-HpcNode -Name $env:COMPUTERNAME -ErrorAction SilentlyContinue | Select-Object -ExpandProperty NodeState)
 while ($state -ne "Online")
 {
   Start-Sleep 10
   $state = (Get-HpcNode -Name $env:COMPUTERNAME -ErrorAction SilentlyContinue | Select-Object -ExpandProperty NodeState)
 }
+#>
 
 Write-Host "Deleting Post-Installation Scheduled Task"
 schtasks.exe /Delete /F /TN PostInstallHPCPack
