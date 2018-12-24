@@ -48,11 +48,11 @@ Write-Host "Running Installation Scheduled Task"
 schtasks.exe /Run /I /TN InstallHPCPack
 
 Write-Host "Waiting for Installation"
-$status = (Get-Service -Name HpcManagement -ErrorAction SilentlyContinue | Select -ExpandProperty Status)
+$status = (Get-Service -Name HpcManagement -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Status)
 while ($status -ne "Running")
 {
   Start-Sleep 10
-  $status = (Get-Service -Name HpcManagement -ErrorAction SilentlyContinue | Select -ExpandProperty Status)
+  $status = (Get-Service -Name HpcManagement -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Status)
 }
 
 & ${env:SystemRoot}\Microsoft.NET\Framework64\v4.0.30319\installutil.exe "C:\Program Files\Microsoft HPC Pack 2012\Bin\ccppsh.dll"
@@ -69,11 +69,11 @@ schtasks.exe /Run /I /TN PostInstallHPCPack
 Write-Host "Waiting for Post-Installation"
 Add-PSSnapIn Microsoft.HPC
 
-$state = (Get-HpcNode -Name $env:COMPUTERNAME -ErrorAction SilentlyContinue | Select -ExpandProperty NodeState)
+$state = (Get-HpcNode -Name $env:COMPUTERNAME -ErrorAction SilentlyContinue | Select-Object -ExpandProperty NodeState)
 while ($state -ne "Online")
 {
   Start-Sleep 10
-  $state = (Get-HpcNode -Name $env:COMPUTERNAME -ErrorAction SilentlyContinue | Select -ExpandProperty NodeState)
+  $state = (Get-HpcNode -Name $env:COMPUTERNAME -ErrorAction SilentlyContinue | Select-Object -ExpandProperty NodeState)
 }
 
 Write-Host "Deleting Post-Installation Scheduled Task"
