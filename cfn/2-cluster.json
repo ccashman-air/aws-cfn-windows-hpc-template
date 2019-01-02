@@ -1,6 +1,6 @@
 {
 	"AWSTemplateFormatVersion" : "2010-09-09",
-	"Description"              : "This CloudFormation stack creates a Microsoft HPC Pack 2012 R2 Cluster in an existing environment. **WARNING** This template creates two or more Amazon EC2 instances. You will be billed for the AWS resources used if you create a stack from this template.",
+	"Description"              : "This CloudFormation stack creates a Microsoft HPC Pack 2016 R2 Cluster in an existing environment. **WARNING** This template creates two or more Amazon EC2 instances. You will be billed for the AWS resources used if you create a stack from this template.",
 	"Parameters"               : {
 		"KeyName" : {
 			"Description": "Name of an existing EC2 Key Pair",
@@ -56,7 +56,7 @@
 			"NoEcho"        : "True"
 		},
 		"AWSAmiId" : {
-			"Description"          : "Identifier of the Amazon Machine Image to use for the platforms (all machines are started using the same AMI). We use Microsoft Windows Server 2012 R2 Base 64bits.",
+			"Description"          : "Identifier of the Amazon Machine Image to use for the platforms (all machines are started using the same AMI). We use Microsoft Windows Server 2016 R2 Base 64bits.",
 			"Type"                 : "String",
 			"AllowedPattern"       : "((ami-([0-9a-fA-F]{8}))|(ami-([0-9a-fA-F]{17})))",
 			"ConstraintDescription": "must be a valid Amazon Machine Image (ami-xxxxxxxxxxxxxxxxx or ami-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx)."
@@ -105,6 +105,19 @@
 			"Type"       : "Number",
 			"MinValue"   : "1",
 			"Default"    : "50"
+		},
+		"CACertificateName" : {
+			"Description": "The file name of the CA certificate to use for configuring HPC",
+			"Type"       : "String"
+		},
+		"SSLCertificateName" : {
+			"Description": "The file name of the SSL certificate to use for configuring HPC",
+			"Type"       : "String"
+		},
+		"SSLCertificatePassword" : {
+			"Description": "Password for the SSL certificate",
+			"Type"       : "String",
+			"NoEcho"     : "True"
 		}
 	},
 	"Conditions": {
@@ -267,7 +280,8 @@
 									"DomainDNSName" : { "Ref" : "DomainDNSName" },
 									"DomainNetBIOSName": { "Ref" : "DomainNetBIOSName" },
 									"HPCUserName" : { "Ref" : "HPCUserName" },
-									"HPCUserPassword": { "Ref" : "HPCUserPassword" }
+									"HPCUserPassword": { "Ref" : "HPCUserPassword" },
+									"SSLCertificatePassword": { "Ref" : "SSLCertificatePassword" }
 								}
 							},
 							"C:\\cfn\\install\\sql-config.conf" : {
@@ -314,12 +328,16 @@
 								"source": "<SUBSTACKSOURCE>cfn-init/install-process-head.ps1",
 								"authentication" : "rolebased"
 			                },
-							"C:\\cfn\\install\\AIR-Win2012HPC2016.pfx" : {
-								"source": "<SUBSTACKSOURCE>cfn-init/AIR-Win2012HPC2016.pfx",
+							"C:\\cfn\\install\\ssl-cert.pfx" : {
+								"source": {
+									"Fn::Join" : [ "", [ "<SUBSTACKSOURCE>cfn-init/", { "Ref": "SSLCertificateName" }, ".pfx" ] ]
+								},
 								"authentication" : "rolebased"
 			                },
-							"C:\\cfn\\install\\AIR-Win2012HPC2016.cer" : {
-								"source": "<SUBSTACKSOURCE>cfn-init/AIR-Win2012HPC2016.cer",
+							"C:\\cfn\\install\\ca-cert.cer" : {
+								"source": {
+									"Fn::Join" : [ "", [ "<SUBSTACKSOURCE>cfn-init/", { "Ref": "CACertificateName" }, ".cer" ] ]
+								},
 								"authentication" : "rolebased"
 			                },
 							"C:\\cfn\\install\\install-hpc-pack.ps1" : {
@@ -477,7 +495,8 @@
 									"DomainDNSName" : { "Ref" : "DomainDNSName" },
 									"DomainNetBIOSName": { "Ref" : "DomainNetBIOSName" },
 									"HPCUserName" : { "Ref" : "HPCUserName" },
-									"HPCUserPassword": { "Ref" : "HPCUserPassword" }
+									"HPCUserPassword": { "Ref" : "HPCUserPassword" },
+									"SSLCertificatePassword": { "Ref" : "SSLCertificatePassword" }
 								}
 							},
 							"C:\\cfn\\install\\configure-network-adapter-settings.ps1" : {
@@ -516,12 +535,16 @@
 								"source": "<SUBSTACKSOURCE>cfn-init/install-process-compute.ps1",
 								"authentication" : "rolebased"
 			                },
-							"C:\\cfn\\install\\AIR-Win2012HPC2016.pfx" : {
-								"source": "<SUBSTACKSOURCE>cfn-init/AIR-Win2012HPC2016.pfx",
+							"C:\\cfn\\install\\ssl-cert.pfx" : {
+								"source": {
+									"Fn::Join" : [ "", [ "<SUBSTACKSOURCE>cfn-init/", { "Ref": "SSLCertificateName" }, ".pfx" ] ]
+								},
 								"authentication" : "rolebased"
 			                },
-							"C:\\cfn\\install\\AIR-Win2012HPC2016.cer" : {
-								"source": "<SUBSTACKSOURCE>cfn-init/AIR-Win2012HPC2016.cer",
+							"C:\\cfn\\install\\ca-cert.cer" : {
+								"source": {
+									"Fn::Join" : [ "", [ "<SUBSTACKSOURCE>cfn-init/", { "Ref": "CACertificateName" }, ".cer" ] ]
+								},
 								"authentication" : "rolebased"
 			                },
 							"C:\\cfn\\install\\install-hpc-pack.ps1" : {

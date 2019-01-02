@@ -11,7 +11,7 @@
 			"Description": "'Name' tag of the snapshot containing the Microsoft HPC Pack installation package",
 			"Type"       : "String",
 			"MinLength"  : "1",
-			"Default"    : "HPC Pack 2012 Installation"
+			"Default"    : "HPC Pack 2016 Update 2 Installation"
 		},
 		"RDPLocation" : {
 			"Description"          : "Lockdown RDP access to the bastion host (default can be accessed from anywhere)",
@@ -85,6 +85,19 @@
 			"Type"       : "Number",
 			"MinValue"   : "1",
 			"Default"    : "5"
+		},
+		"CACertificateName" : {
+			"Description": "The file name of the CA certificate to use for configuring HPC",
+			"Type"       : "String"
+		},
+		"SSLCertificateName" : {
+			"Description": "The file name of the SSL certificate to use for configuring HPC",
+			"Type"       : "String"
+		},
+		"SSLCertificatePassword" : {
+			"Description": "Password for the SSL certificate",
+			"Type"       : "String",
+			"NoEcho"     : "True"
 		}
 	},
 	"Resources": {
@@ -93,7 +106,7 @@
 			"Properties": {
 				"TemplateURL": "<SUBSTACKSOURCE>cfn/tool-find-image.json",
 				"Parameters" : {
-					"AMIName": "Windows_Server-2012-R2_RTM-English-64Bit-Base"
+					"AMIName": "Windows_Server-2016-English-Full-Base-2018.11.28"
 				}
 			}
 		},
@@ -141,7 +154,10 @@
 					"ComputeNodeInstanceType": { "Ref": "ComputeNodeInstanceType" },
 					"ClusterPlacementGroup": { "Ref": "ClusterPlacementGroup" },
 					"ComputeNodeInstanceCount": { "Ref": "ComputeNodeInstanceCount" },
-					"ComputeNodeInstanceMaxCount": { "Ref": "ComputeNodeInstanceMaxCount" }
+					"ComputeNodeInstanceMaxCount": { "Ref": "ComputeNodeInstanceMaxCount" },
+					"CACertificateName": { "Ref": "CACertificateName" },
+					"SSLCertificateName": { "Ref": "SSLCertificateName" },
+					"SSLCertificatePassword": { "Ref": "SSLCertificatePassword" }
 				}
 			}
 		}

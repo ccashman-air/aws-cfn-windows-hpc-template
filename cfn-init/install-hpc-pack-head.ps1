@@ -18,15 +18,33 @@
 # 
 # This PowerShell script installs Microsoft HPC Pack on a Head Node 
 #
+[CmdletBinding()]
+param(
+  [Parameter(Mandatory=$True,Position=1)]
+  [string]$UserFile
+)
+
+if (-not (Test-Path $UserFile))
+{
+    Throw "File '$UserFile' does not exist, exiting script"
+}
+
+$content = Get-Content $UserFile
+$sslPS = $content[5]
 
 Import-Module ServerManager
+
 Install-WindowsFeature DHCP, FS-Resource-Manager, DirectAccess-VPN, Routing, Web-Default-Doc, Web-Dir-Browsing, Web-Http-Errors, Web-Static-Content, Web-Http-Logging, Web-Stat-Compression, Web-Filtering, Web-IP-Security, Web-Scripting-Tools, WDS-Transport, MSMQ-Server, Windows-Internal-Database
 
 Write-Host "Starting Installation"
 Write-Host ""
 Write-Host "- Install SQL"
+
 D:\SQLInstall\setup.exe /CONFIGURATIONFILE=C:\cfn\install\sql-config.conf
 
 Write-Host ""
 Write-Host "- Install HPC Pack"
-D:\HPCPack2012R2-Full\Setup.exe -unattend -headNode -installdir:"D:\HPCPack2012" -datadir:"D:\HPCPack2012\Data" -MgmtDbDir:"D:\HPCPack2012\Database\Data\ManagementDB" -MgmtDbLogDir:"D:\HPCPack2012\Database\Log\ManagementDB" -SchdDbDir:"D:\HPCPack2012\Database\Data\SchedulerDB" -SchdDbLogDir:"D:\HPCPack2012\Database\Log\SchedulerDB" -ReportingDbDir:"D:\HPCPack2012\Database\Data\ReportingDB" -ReportingDbLogDir:"D:\HPCPack2012\Database\Log\ReportingDB" -DiagDbDir:"D:\HPCPack2012\Database\Data\DiagnosticsDB" -DiagDbLogDir:"D:\HPCPack2012\Database\Log\DiagnosticsDB" -MonDbDir:"D:\HPCPack2012\Database\Data\MonitoringDB" -MonDbLogDir:"D:\HPCPack2012\Database\Log\MonitoringDB" -runtimeShareDirectory:"D:\HPCRuntimeDirectory"
+
+# Removed -RuntimeShare:"D:\HPCRuntimeDirectory"
+#
+D:\HPCPack2016Update2-Full\Setup.exe -Unattend -HeadNode -InstallDir:"D:\HPCPack2016" -DataDir:"D:\HPCPack2016\Data" -MgmtDbDir:"D:\HPCPack2016\Database\Data\ManagementDB" -MgmtDbLogDir:"D:\HPCPack2016\Database\Log\ManagementDB" -SchdDbDir:"D:\HPCPack2016\Database\Data\SchedulerDB" -SchdDbLogDir:"D:\HPCPack2016\Database\Log\SchedulerDB" -ReportingDbDir:"D:\HPCPack2016\Database\Data\ReportingDB" -ReportingDbLogDir:"D:\HPCPack2016\Database\Log\ReportingDB" -DiagDbDir:"D:\HPCPack2016\Database\Data\DiagnosticsDB" -DiagDbLogDir:"D:\HPCPack2016\Database\Log\DiagnosticsDB" -MonDbDir:"D:\HPCPack2016\Database\Data\MonitoringDB" -MonDbLogDir:"D:\HPCPack2016\Database\Log\MonitoringDB" -SSLPfxFilePath:"C:\cfn\install\ssl-cert.pfx" -SSLPfxFilePassword:"$sslPS" -CACertificate:"C:\cfn\install\ca-cert.cer"

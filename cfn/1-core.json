@@ -1,6 +1,6 @@
 {
 	"AWSTemplateFormatVersion" : "2010-09-09",
-	"Description"              : "This CloudFormation stack creates the core infrastructure (network, AD, Bastion) for the deployment of Microsoft HPC Pack 2012 R2. **WARNING** This template creates two Amazon EC2 instances. You will be billed for the AWS resources used if you create a stack from this template.",
+	"Description"              : "This CloudFormation stack creates the core infrastructure (network, AD, Bastion) for the deployment of Microsoft HPC Pack 2016 R2. **WARNING** This template creates two Amazon EC2 instances. You will be billed for the AWS resources used if you create a stack from this template.",
 	"Parameters"               : {
 		"KeyName" : {
 			"Description": "Name of an existing EC2 Key Pair",
@@ -81,7 +81,7 @@
 			"NoEcho"        : "True"
 		},
 		"AWSAmiId" : {
-			"Description"          : "Identifier of the Amazon Machine Image to use for the platforms (all machines are started using the same AMI). We use Microsoft Windows Server 2012 R2 Base 64bits.",
+			"Description"          : "Identifier of the Amazon Machine Image to use for the platforms (all machines are started using the same AMI). We use Microsoft Windows Server 2016 Base 64bits.",
 			"Type"                 : "String",
 			"AllowedPattern"       : "((ami-([0-9a-fA-F]{8}))|(ami-([0-9a-fA-F]{17})))",
 			"ConstraintDescription": "must be a valid Amazon Machine Image (ami-xxxxxxxxxxxxxxxxx or ami-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx)."

@@ -18,5 +18,18 @@
 # 
 # This PowerShell script installs Microsoft HPC Pack on a Compute Node 
 #
+[CmdletBinding()]
+param(
+  [Parameter(Mandatory=$True,Position=1)]
+  [string]$UserFile
+)
 
-D:\HPCPack2012R2-Full\Setup.exe -unattend -computeNode:head-node
+if (-not (Test-Path $UserFile))
+{
+    Throw "File '$UserFile' does not exist, exiting script"
+}
+
+$content = Get-Content $UserFile
+$sslPS = $content[5]
+
+D:\HPCPack2016Update2-Full\Setup.exe -Unattend -ComputeNode:"HEAD-NODE" -SSLPfxFilePath:"C:\cfn\install\AIR-Win2012HPC2016.pfx" -SSLPfxFilePath:"C:\cfn\install\ssl-cert.pfx" -SSLPfxFilePassword:"sslPS" -CACertificate:"C:\cfn\install\ca-cert.cer"
