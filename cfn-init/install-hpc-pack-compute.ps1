@@ -32,4 +32,4 @@ if (-not (Test-Path $UserFile))
 $content = Get-Content $UserFile
 $sslPS = $content[5]
 
-D:\HPCPack2016Update2-Full\Setup.exe -Unattend -ComputeNode:"HEAD-NODE" -SSLPfxFilePath:"C:\cfn\install\AIR-Win2012HPC2016.pfx" -SSLPfxFilePath:"C:\cfn\install\ssl-cert.pfx" -SSLPfxFilePassword:"sslPS" -CACertificate:"C:\cfn\install\ca-cert.cer"
+D:\HPCPack2016Update2-Full\Setup.exe -Unattend -ComputeNode:"HEAD-NODE" -SSLPfxFilePath:"C:\cfn\install\AIR-Win2012HPC2016.pfx" -SSLPfxFilePath:"C:\cfn\install\ssl-cert.pfx" -SSLPfxFilePassword:"$sslPS" -CACertificate:"C:\cfn\install\ca-cert.cer"
