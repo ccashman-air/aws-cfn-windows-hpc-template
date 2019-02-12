@@ -70,7 +70,6 @@ Write-Host "Publishing AWS Lambda function sources"
 
 Get-ChildItem "lambda" -Filter *.js | ForEach-Object {
     $FullName = $_.FullName
-    $FileName = $_.Name
     $BaseName = $_.BaseName
     $TmpName  = "${FullName}.zip"
   
@@ -89,8 +88,17 @@ Get-ChildItem "cfn-init" -Filter *.ps1 | ForEach-Object {
 }
 
 Write-Host ""
-Write-Host "Publishing Configuration Files"
+Write-Host "Publishing Configuration Files (CONF)"
 Get-ChildItem "cfn-init" -Filter *.conf | ForEach-Object {
+    $FullName = $_.FullName
+    $FileName = $_.Name
+
+    & aws s3 cp $FullName "s3://${Destination}/cfn-init/${FileName}" --profile $Profile
+}
+
+Write-Host ""
+Write-Host "Publishing Configuration Files (JSON)"
+Get-ChildItem "cfn-init" -Filter *.json | ForEach-Object {
     $FullName = $_.FullName
     $FileName = $_.Name
 
