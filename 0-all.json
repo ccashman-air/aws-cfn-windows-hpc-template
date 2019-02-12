@@ -106,7 +106,7 @@
 			"Properties": {
 				"TemplateURL": "<SUBSTACKSOURCE>cfn/tool-find-image.json",
 				"Parameters" : {
-					"AMIName": "Windows_Server-2016-English-Full-Base-2018.11.28"
+					"AMIName": "Windows_Server-2016-English-Full-Base-2019.02.09"
 				}
 			}
 		},
