@@ -1,0 +1,47 @@
+{
+    "IsEnabled": true,
+    "EngineConfiguration": {
+        "PollInterval": "00:00:15",
+         "Components": [
+           {
+                "Id": "PerformanceCounter-BusyCores",
+                "FullName": "AWS.EC2.Windows.CloudWatch.PerformanceCounterComponent.PerformanceCounterInputComponent,AWS.EC2.Windows.CloudWatch",
+                "Parameters": {
+                    "CategoryName": "HPC Cores",
+                    "CounterName": "Number of busy cores",
+                    "InstanceName": "",
+                    "MetricName": "Busy Cores",
+                    "Unit": "Count",
+                    "DimensionName": "",
+                    "DimensionValue": ""
+                }
+            },
+            {
+                "Id": "PerformanceCounter-TotalCores",
+                "FullName": "AWS.EC2.Windows.CloudWatch.PerformanceCounterComponent.PerformanceCounterInputComponent,AWS.EC2.Windows.CloudWatch",
+                "Parameters": {
+                    "CategoryName": "HPC Cores",
+                    "CounterName": "Total number of cores",
+                    "InstanceName": "",
+                    "MetricName": "Total Cores",
+                    "Unit": "Count",
+                    "DimensionName": "",
+                    "DimensionValue": ""
+                }
+            },
+            {
+                "Id": "PerformanceCounter-QueuedJobs",
+                "FullName": "AWS.EC2.Windows.CloudWatch.PerformanceCounterComponent.PerformanceCounterInputComponent,AWS.EC2.Windows.CloudWatch",
+                "Parameters": {
+                    "CategoryName": "HPC Jobs",
+                    "CounterName": "Number of queued jobs",
+                    "InstanceName": "",
+                    "MetricName": "Queued Jobs",
+                    "Unit": "Count",
+                    "DimensionName": "",
+                    "DimensionValue": ""
+                }
+            }
+         ]
+    }
+}
