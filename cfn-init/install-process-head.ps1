@@ -79,7 +79,7 @@ while ($state -ne "Online")
 Write-Host "Deleting Post-Installation Scheduled Task"
 schtasks.exe /Delete /F /TN PostInstallHPCPack
 
-Write-Host "Registering Metrics Publication Scheduled Task"
-schtasks.exe /Create /SC MINUTE /MO 1 /RU "$UserPS" /RP "$PassPS" /TN ComputeMetrics /TR "powershell.exe -ExecutionPolicy Unrestricted C:\cfn\install\compute-metrics.ps1 -Region $Region -Stack $Stack >> C:\cfn\log\metrics-publish.log 2>&1"
+#Write-Host "Registering Metrics Publication Scheduled Task"
+#schtasks.exe /Create /SC MINUTE /MO 1 /RU "$UserPS" /RP "$PassPS" /TN ComputeMetrics /TR "powershell.exe -ExecutionPolicy Unrestricted C:\cfn\install\compute-metrics.ps1 -Region $Region -Stack $Stack >> C:\cfn\log\metrics-publish.log 2>&1"
 
 Write-Host "Done"
