@@ -157,6 +157,103 @@
 								}
 							]
 						}
+					},
+					{
+						"PolicyName"    : "AmazonEC2RoleForSSM",
+						"PolicyDocument": {
+							"Version": "2012-10-17",
+							"Statement": [
+									{
+											"Effect": "Allow",
+											"Action": [
+													"ssm:DescribeAssociation",
+													"ssm:GetDeployablePatchSnapshotForInstance",
+													"ssm:GetDocument",
+													"ssm:DescribeDocument",
+													"ssm:GetManifest",
+													"ssm:GetParameters",
+													"ssm:ListAssociations",
+													"ssm:ListInstanceAssociations",
+													"ssm:PutInventory",
+													"ssm:PutComplianceItems",
+													"ssm:PutConfigurePackageResult",
+													"ssm:UpdateAssociationStatus",
+													"ssm:UpdateInstanceAssociationStatus",
+													"ssm:UpdateInstanceInformation"
+											],
+											"Resource": "*"
+									},
+									{
+											"Effect": "Allow",
+											"Action": [
+													"ssmmessages:CreateControlChannel",
+													"ssmmessages:CreateDataChannel",
+													"ssmmessages:OpenControlChannel",
+													"ssmmessages:OpenDataChannel"
+											],
+											"Resource": "*"
+									},
+									{
+											"Effect": "Allow",
+											"Action": [
+													"ec2messages:AcknowledgeMessage",
+													"ec2messages:DeleteMessage",
+													"ec2messages:FailMessage",
+													"ec2messages:GetEndpoint",
+													"ec2messages:GetMessages",
+													"ec2messages:SendReply"
+											],
+											"Resource": "*"
+									},
+									{
+											"Effect": "Allow",
+											"Action": [
+													"cloudwatch:PutMetricData"
+											],
+											"Resource": "*"
+									},
+									{
+											"Effect": "Allow",
+											"Action": [
+													"ec2:DescribeInstanceStatus"
+											],
+											"Resource": "*"
+									},
+									{
+											"Effect": "Allow",
+											"Action": [
+													"ds:CreateComputer",
+													"ds:DescribeDirectories"
+											],
+											"Resource": "*"
+									},
+									{
+											"Effect": "Allow",
+											"Action": [
+													"logs:CreateLogGroup",
+													"logs:CreateLogStream",
+													"logs:DescribeLogGroups",
+													"logs:DescribeLogStreams",
+													"logs:PutLogEvents"
+											],
+											"Resource": "*"
+									},
+									{
+											"Effect": "Allow",
+											"Action": [
+													"s3:GetBucketLocation",
+													"s3:PutObject",
+													"s3:GetObject",
+													"s3:GetEncryptionConfiguration",
+													"s3:AbortMultipartUpload",
+													"s3:ListMultipartUploadParts",
+													"s3:ListBucket",
+													"s3:ListBucketMultipartUploads"
+											],
+											"Resource": "*"
+									}
+							]
+						}
 					}
 				]
 			}
@@ -237,6 +334,42 @@
 			"Type" : "AWS::CloudFormation::WaitConditionHandle"
 		},
 
+		"HeadNodeCloudWatchSSMDocument" : {
+			"Type"       : "AWS::SSM::Document",
+			"Properties" : {
+				"Content" : {
+					"schemaVersion": "1.2",
+					"description": "Export metrics and log files from your instances to Amazon CloudWatch.",
+					"parameters": {
+					  "status": {
+						"type": "String",
+						"default": "Enabled",
+						"description": "(Optional) Enable or disable CloudWatch. Valid values: Enabled | Disabled",
+						"allowedValues": [
+						  "Enabled",
+						  "Disabled"
+						]
+					  },
+					  "properties": {
+						"type": "String",
+						"default": "",
+						"description": "(Optional) The configuration for CloudWatch in JSON format. Learn more at https://docs.aws.amazon.com/systems-manager/latest/userguide/ssm-plugins.html#aws-cloudWatch",
+						"displayType": "textarea"
+					  }
+					},
+					"runtimeConfig": {
+					  "aws:cloudWatch": {
+						"settings": {
+						  "startType": "{{ status }}"
+						},
+						"properties": "{{ properties }}"
+					  }
+					}
+				  },
+				"DocumentType" : "Command"
+			}
+		},
+
 		"HeadNode": {
 			"Type": "AWS::EC2::Instance",
 			"Metadata": {
@@ -273,7 +406,7 @@
 									"Region" : { "Ref" : "AWS::Region" }
 								}
 							},
-			                "C:\\cfn\\install\\hpc-user-info.conf": {
+			        "C:\\cfn\\install\\hpc-user-info.conf": {
 								"source": "<SUBSTACKSOURCE>cfn-init/hpc-user-info.conf",
 								"authentication" : "rolebased",
 								"context" : {
@@ -448,7 +581,14 @@
 							"</script>"
 						] ]
 					}
-				}
+				},
+				"SsmAssociations" : [{
+					"DocumentName" : { "Ref" : "HeadNodeCloudWatchSSMDocument" },
+					"AssociationParameters" : [
+						{ "Key" : "status",     "Value" : [ "Enabled" ] },
+						{ "Key" : "properties", "Value" : [ "{     \"IsEnabled\": true,     \"EngineConfiguration\": {         \"PollInterval\": \"00:00:15\",          \"Components\": [            {                 \"Id\": \"PerformanceCounter-BusyCores\",                 \"FullName\": \"AWS.EC2.Windows.CloudWatch.PerformanceCounterComponent.PerformanceCounterInputComponent,AWS.EC2.Windows.CloudWatch\",                 \"Parameters\": {                     \"CategoryName\": \"HPC Cores\",                     \"CounterName\": \"Number of busy cores\",                     \"InstanceName\": \"\",                     \"MetricName\": \"Busy Cores\",                     \"Unit\": \"Count\",                     \"DimensionName\": \"\",                     \"DimensionValue\": \"\"                 }             },             {                 \"Id\": \"PerformanceCounter-TotalCores\",                 \"FullName\": \"AWS.EC2.Windows.CloudWatch.PerformanceCounterComponent.PerformanceCounterInputComponent,AWS.EC2.Windows.CloudWatch\",                 \"Parameters\": {                     \"CategoryName\": \"HPC Cores\",                     \"CounterName\": \"Total number of cores\",                     \"InstanceName\": \"\",                     \"MetricName\": \"Total Cores\",                     \"Unit\": \"Count\",                     \"DimensionName\": \"\",                     \"DimensionValue\": \"\"                 }             },             {                 \"Id\": \"PerformanceCounter-QueuedJobs\",                 \"FullName\": \"AWS.EC2.Windows.CloudWatch.PerformanceCounterComponent.PerformanceCounterInputComponent,AWS.EC2.Windows.CloudWatch\",                 \"Parameters\": {                     \"CategoryName\": \"HPC Jobs\",                     \"CounterName\": \"Number of queued jobs\",                     \"InstanceName\": \"\",                     \"MetricName\": \"Queued Jobs\",                     \"Unit\": \"Count\",                     \"DimensionName\": \"\",                     \"DimensionValue\": \"\"                 }             }          ]     } }" ] }
+					]
+				}]
 			}
 		},
 
