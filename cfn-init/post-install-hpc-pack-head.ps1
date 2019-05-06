@@ -49,3 +49,6 @@ Set-HpcClusterProperty -NodeNamingSeries "Compute%1000%"
 New-HpcNodeTemplate -Name "ComputeNode Template" -Description "Custom compute node template" -Type ComputeNode -UpdateCategory None 
 Set-HpcNode -Name $env:COMPUTERNAME -Role BrokerNode
 Set-HpcNodeState -Name $env:COMPUTERNAME -State online
+
+Stop-Process -Name "amazon-ssm-agent" -force 
+

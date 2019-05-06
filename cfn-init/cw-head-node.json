@@ -46,16 +46,16 @@
                 "Id": "CloudWatch",
                 "FullName": "AWS.EC2.Windows.CloudWatch.CloudWatch.CloudWatchOutputComponent,AWS.EC2.Windows.CloudWatch",
                 "Parameters": {
-                    "AccessKey": "",
-                    "SecretKey": "",
                     "Region": "us-east-1",
-                    "NameSpace": "HPC Cluster Metrics"
+                    "NameSpace": "HPC Head Node Metrics"
                 }
             }
          ],
          "Flows": {
             "Flows": [
-              "(PerformanceCounter-BusyCores, PerformanceCounter-TotalCores, PerformanceCounter-QueuedJobs),CloudWatch"
+              "PerformanceCounter-BusyCores,  CloudWatch",
+              "PerformanceCounter-TotalCores, CloudWatch",
+              "PerformanceCounter-QueuedJobs, CloudWatch"
             ]
         }
     }
