@@ -813,7 +813,89 @@
 			}
 		},
 
+		"ScaleDown": {
+			"Type"      : "AWS::AutoScaling::ScalingPolicy",
+			"Properties": {
+				"AdjustmentType"      : "ChangeInCapacity",
+				"AutoScalingGroupName": { "Ref": "ComputeNodes" },
+				"Cooldown"            : "60",
+				"ScalingAdjustment"   : "-1"
+			}
+		},
 
+		"ComputeNodesScaleDown": {
+			"Type": "AWS::CloudWatch::Alarm",
+			"Properties": {
+				"AlarmDescription"  : "The current fleet has excess capacity and no jobs are queued.",
+				"Metrics"           : [ {
+					"MetricStat" : {
+						"Metric" : { "MetricName" : "HpcBusyCores", "Namespace" : "HPC Head Node Metrics" },
+						"Period" : 60,
+						"Stat"   : "Average",
+						"Unit"   : "Count"
+					},
+					"Id"         : "m1",
+					"Label"      : "HPC Busy Cores",
+					"ReturnData" : false
+				},
+				{
+					"MetricStat" : {
+						"Metric" : { "MetricName" : "HpcTotalCores", "Namespace" : "HPC Head Node Metrics" },
+						"Period" : 60,
+						"Stat"   : "Average",
+						"Unit"   : "Count"
+					},
+					"Id"         : "m2",
+					"Label"      : "HPC Total Cores",
+					"ReturnData" : false
+				},
+				{
+					"MetricStat" : {
+						"Metric" : { "MetricName" : "HpcQueuedJobs", "Namespace" : "HPC Head Node Metrics" },
+						"Period" : 60,
+						"Stat"   : "Average",
+						"Unit"   : "Count"
+					},
+					"Id"         : "m3",
+					"Label"      : "HPC Queued Jobs",
+					"ReturnData" : false
+				},
+				{
+					"Expression" : "(m1/m2)-0.95",
+					"Id"         : "e1posNeg",
+					"Label"      : "",
+					"ReturnData" : false
+				},
+				{
+					"Expression" : "m3-5",
+					"Id"         : "e2posNeg",
+					"Label"      : "",
+					"ReturnData" : false
+				},
+				{
+					"Expression" : "e1posNeg/ABS(e1posNeg)+1",
+					"Id"         : "e3",
+					"Label"      : "",
+					"ReturnData" : false
+				},
+				{
+					"Expression" : "e2posNeg/ABS(e2posNeg)+1",
+					"Id"         : "e4",
+					"Label"      : "",
+					"ReturnData" : false
+				},
+				{
+					"Expression" : "e3 * e4",
+					"Id"         : "result",
+					"Label"      : "",
+					"ReturnData" : true
+				}],
+				"EvaluationPeriods" : "5",
+				"Threshold"         : { "Ref": "AlarmThreshold" },
+				"AlarmActions"      : [ { "Ref": "ScaleDown" } ],
+				"ComparisonOperator": "GreaterThanOrEqualToThreshold"
+			}
+		},
 
 		"ComputeNodes": {
 			"DependsOn": ["HeadNodeWaitCondition"],
